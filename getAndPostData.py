@@ -1,10 +1,12 @@
 import paho.mqtt.client as mqtt
 import json
 import pyodbc
+import pytz
+from datetime import datetime
+import os
 
 
 def connect_database(server, database, user, password):
-    driver = '{ODBC Driver 18 for SQL Server}'
     connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
     conn = pyodbc.connect(connectionString)
     return conn
@@ -30,12 +32,6 @@ conn = connect_database(server, database, username, password)
 cursor = conn.cursor()
 
 
-
-import pytz
-import paho.mqtt.client as mqtt
-import json
-from datetime import datetime
-import os
 
 
 collected_data = []
