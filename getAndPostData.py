@@ -31,9 +31,6 @@ password = '{Uabenergy1!}'
 conn = connect_database(server, database, username, password)
 cursor = conn.cursor()
 
-
-
-
 collected_data = []
 
 
