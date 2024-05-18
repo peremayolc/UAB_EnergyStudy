@@ -1,13 +1,3 @@
-import paho.mqtt.client as mqtt
-import json
-from datetime import datetime
-import pytz
-from openpyxl import Workbook
-from openpyxl import load_workbook
-import os
-import pyodbc
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from pythermalcomfort.models import at
 from pythermalcomfort.utilities import v_relative
 import numpy as np
