@@ -27,6 +27,12 @@ sensors_name = {
     "am307-9074": "Computer Room"
 }
 
+# List of all possible variables for both sensor types
+all_possible_variables = [
+    "activity", "co2", "humidity", "illumination", "infrared", "infrared_and_visible", 
+    "pressure", "temperature", "tvoc", "light_level", "o3", "pir", "pm10", "pm2_5"
+]
+
 # Create a directory for storing sensor data files
 data_dir = "sensor_data"
 if not os.path.exists(data_dir):
@@ -73,59 +79,11 @@ def on_message2(mqttc, userdata, msg):
             if room_name not in sensor_data:
                 sensor_data[room_name] = deque(maxlen=7)
 
-            if device_id in APPEUIs_AM107:
-                # AM107
-                activity = decoded_payload.get("activity")
-                co2 = decoded_payload.get("co2")
-                humidity = decoded_payload.get("humidity")
-                illumination = decoded_payload.get("illumination")
-                infrared = decoded_payload.get("infrared")
-                infrared_and_visible = decoded_payload.get("infrared_and_visible")
-                pressure = decoded_payload.get("pressure")
-                temperature = decoded_payload.get("temperature")
-                tvoc = decoded_payload.get("tvoc")
+            # Extract all possible variables from the payload
+            data = [timestamp, room_name] + [decoded_payload.get(var, None) for var in all_possible_variables]
+            print(data)
 
-                print("Activity:", activity)
-                print("CO2:", co2)
-                print("Humidity:", humidity)
-                print("Illumination:", illumination)
-                print("Infrared:", infrared)
-                print("Infrared and Visible:", infrared_and_visible)
-                print("Pressure:", pressure)
-                print("Temperature:", temperature)
-                print("TVOC:", tvoc)
-
-                sensor_data[room_name].append([timestamp, room_name, co2, humidity, illumination, temperature, tvoc])
-
-            elif device_id in APPEUIs_AM300:
-                # AM300
-                co2 = decoded_payload.get("co2")
-                humidity = decoded_payload.get("humidity")
-                light_level = decoded_payload.get("light_level")
-                o3 = decoded_payload.get("o3")
-                pir = decoded_payload.get("pir")
-                pm10 = decoded_payload.get("pm10")
-                pm2_5 = decoded_payload.get("pm2_5")
-                pressure = decoded_payload.get("pressure")
-                temperature = decoded_payload.get("temperature")
-                tvoc = decoded_payload.get("tvoc")
-
-                print("CO2:", co2)
-                print("Humidity:", humidity)
-                print("Light Level:", light_level)
-                print("O3:", o3)
-                print("PIR:", pir)
-                print("PM10:", pm10)
-                print("PM2.5:", pm2_5)
-                print("Pressure:", pressure)
-                print("Temperature:", temperature)
-                print("TVOC:", tvoc)
-
-                sensor_data[room_name].append([timestamp, room_name, co2, humidity, light_level, o3, pm10, pm2_5, temperature, tvoc])
-
-            else:
-                print("Unknown device type:", device_id)
-                return
+            sensor_data[room_name].append(data)
 
             save_data_to_file(room_name, sensor_data[room_name])
         else:
