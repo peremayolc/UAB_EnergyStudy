@@ -2,24 +2,11 @@ import paho.mqtt.client as mqtt
 import json
 from datetime import datetime
 import pytz
-from openpyxl import Workbook
-from openpyxl import load_workbook
+from collections import deque
 import os
-import pyodbc
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from pythermalcomfort.models import at
-from pythermalcomfort.utilities import v_relative
-import numpy as np
 
-
-# Initialize the main dictionary
-sensors2 = {}
-sensors1 = {}
-
-# Example data for demonstration purposes
-collected_data1 = []
-collected_data2 = []
+# Initialize dictionaries to store data for each sensor
+sensor_data = {}
 
 # Application information
 APPID = "sensors-openlab@ttn"
@@ -39,6 +26,11 @@ sensors_name = {
     "am3019-testqc2090": "Test device qc2090",
     "am307-9074": "Computer Room"
 }
+
+# Create a directory for storing sensor data files
+data_dir = "sensor_data"
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
 
 # Callback function for message reception
 def on_message(mqttc, userdata, msg):
@@ -78,6 +70,9 @@ def on_message2(mqttc, userdata, msg):
 
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+            if room_name not in sensor_data:
+                sensor_data[room_name] = deque(maxlen=7)
+
             if device_id in APPEUIs_AM107:
                 # AM107
                 activity = decoded_payload.get("activity")
@@ -100,14 +95,7 @@ def on_message2(mqttc, userdata, msg):
                 print("Temperature:", temperature)
                 print("TVOC:", tvoc)
 
-                collected_data1.append([timestamp, room_name, co2, humidity, illumination, temperature, tvoc])
-
-                if room_name not in sensors2:
-                    sensors2[room_name] = {}
-                sensors2[room_name][timestamp] = [co2, humidity, illumination, temperature, tvoc]
-
-                # Save data to Excel after printing sensor data
-                #save_data_to_excel(collected_data1, "sensor_data_AM107.xlsx")
+                sensor_data[room_name].append([timestamp, room_name, co2, humidity, illumination, temperature, tvoc])
 
             elif device_id in APPEUIs_AM300:
                 # AM300
@@ -133,20 +121,23 @@ def on_message2(mqttc, userdata, msg):
                 print("Temperature:", temperature)
                 print("TVOC:", tvoc)
 
-                collected_data2.append([timestamp, room_name, co2, humidity, light_level, o3, pm10, pm2_5, temperature, tvoc])
+                sensor_data[room_name].append([timestamp, room_name, co2, humidity, light_level, o3, pm10, pm2_5, temperature, tvoc])
 
-                if room_name not in sensors2:
-                    sensors2[room_name] = {}
-                sensors2[room_name][timestamp] = [co2, humidity, light_level, o3, pm10, pm2_5, temperature, tvoc]
-
-                # Save data to Excel after printing sensor data
-                #save_data_to_excel(collected_data2, "sensor_data_AM300.xlsx")
             else:
                 print("Unknown device type:", device_id)
+                return
+
+            save_data_to_file(room_name, sensor_data[room_name])
         else:
             print("Error: Unknown device ID")
     except Exception as e:
         print("Error:", e)
+
+def save_data_to_file(sensor_name, data):
+    filename = f"{sensor_name.replace(' ', '_')}.json"
+    filepath = os.path.join(data_dir, filename)
+    with open(filepath, 'w') as f:
+        json.dump(list(data), f)
 
 # MQTT client setup
 mqttc = mqtt.Client()
