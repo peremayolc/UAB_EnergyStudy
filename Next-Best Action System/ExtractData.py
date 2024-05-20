@@ -94,7 +94,7 @@ def on_message2(mqttc, userdata, msg):
 def save_data_to_file(sensor_name, data):
     filename = f"{sensor_name.replace(' ', '_')}.json"
     filepath = os.path.join(data_dir, filename)
-    with open(filepath, 'w') as f:
+    with open(filepath, 'a') as f:
         json.dump(list(data), f)
 
 # MQTT client setup
