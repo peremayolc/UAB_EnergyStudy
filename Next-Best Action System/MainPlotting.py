@@ -23,17 +23,13 @@ def process_data(data):
 
         # Extracting relevant sensor data
         co2 = entry[3]
-        humidity = entry[4]
-        temp = entry [9]
-        tvoc = entry[10]
-        o3 = entry[12]
-        pm10 = entry[14]
-        pm2_5 = entry[15]
+        tvoc = entry[4]
+        temp = entry[9]
+        humidity = entry[10]
+        air_speed = entry[11] if entry[11] is not None else 0  # defaulting air speed to 0 if null
 
-        air_speed = 0.1
-        
         # Calculate AIQ and apparent temperature
-        aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
+        aiq = calculate_aiq(co2, tvoc)
         apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met=1.2, clo=0.5)
 
         aiq_values.append(aiq)
@@ -60,8 +56,6 @@ def plot_data(timestamps, aiq_values, apparent_temps, title):
     plt.title(title)
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.show()
-
-
 
 # Main script to process all files in the directory
 directory_path = 'C:/GitHub Repositories/UAB_EnergyStudy/sensor_data'
