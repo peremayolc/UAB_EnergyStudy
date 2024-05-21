@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 import matplotlib.pyplot as plt
 from ComfortMeasures import calculate_aiq, calculate_apparent_temp  # Ensure these functions are correctly imported
-
+from ExtractData import *
 # Function to read data from JSON file
 def read_sensor_data(file_path):
     with open(file_path, 'r') as file:
@@ -41,6 +41,7 @@ def process_data(data):
 
         aiq_values.append(aiq)
         apparent_temps.append(apparent_temp)
+        print('a')
 
     return timestamps, aiq_values, apparent_temps
 
@@ -65,7 +66,6 @@ def plot_temp(timestamps, apparent_temps, title):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
-
 
 # Main script to process all files in the directory
 directory_path = 'C:/GitHub Repositories/UAB_EnergyStudy/sensor_data'
