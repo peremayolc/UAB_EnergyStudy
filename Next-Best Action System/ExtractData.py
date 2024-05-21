@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 from collections import deque
 import os
-
+from MainPlotting import *
 # Initialize dictionaries to store data for each sensor
 sensor_data = {}
 
@@ -34,7 +34,7 @@ all_possible_variables = [
 ]
 
 # Create a directory for storing sensor data files
-data_dir = "sensor_data"
+data_dir = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 

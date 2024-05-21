@@ -2,8 +2,12 @@ import json
 import os
 from datetime import datetime
 import matplotlib.pyplot as plt
-from ComfortMeasures import calculate_aiq, calculate_apparent_temp
+from ComfortMeasures import calculate_aiq, calculate_apparent_temp, v_relative
 from ExtractData import *
+
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import time
 
 
 def read_sensor_data(file_path):
@@ -85,24 +89,39 @@ def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
     plt.close()
 
 
+class ChangeHandler(FileSystemEventHandler):
+    """Handle file system events - focusing on modified files."""
+    def on_modified(self, event):
+        if event.is_directory:
+            return
+        if event.src_path.endswith('.jpg'):
+            print(f"JPEG file changed: {event.src_path}")
+            # Add your logic here for what happens when a file is modified
 
-directory_path = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
-files = [f for f in os.listdir(directory_path) if f.endswith('.json')]
+def monitor_folder(path):
+    event_handler = ChangeHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path, recursive=False)
+    observer.start()
+    return observer
 
-for file_name in files:
-    file_path = os.path.join(directory_path, file_name)
+if __name__ == "__main__":
+    # Folders to monitor
+    folder1 = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
+    folder2 = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
+
+    observer1 = monitor_folder(folder1)
+    observer2 = monitor_folder(folder2)
+
+    print("Monitoring started")
+
     try:
-        data = read_sensor_data(file_path)
-        timestamps, aiq_values, apparent_temps = process_data(data)
-        
-        # Generate a unique ID or use filename for plot identification
-        plot_id = file_name.replace('.json', '')
-        
-        # Plot and save AIQ
-        plot_and_save_AIQ(timestamps, aiq_values, f"{plot_id} AIQ", plot_id)
-        plot_and_save_TEMP(timestamps, apparent_temps, f"{plot_id} Apparent Temp", plot_id)
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer1.stop()
+        observer2.stop()
 
-    except Exception as e:
-        print(f"Failed to process {file_name}: {e}")
-
+    observer1.join()
+    observer2.join()
 
