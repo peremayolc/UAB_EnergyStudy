@@ -12,24 +12,31 @@ def read_sensor_data(file_path):
 
 # Function to process the data
 def process_data(data):
+    # Extract data and parse timestamps
+    entries = [(datetime.strptime(entry[0], "%Y-%m-%d %H:%M:%S"), entry) for entry in data]
+    # Sort entries based on timestamps
+    entries.sort(key=lambda x: x[0])
+
     timestamps = []
     aiq_values = []
     apparent_temps = []
 
-    for entry in data:
-        # Parse the date time
-        date_time = datetime.strptime(entry[0], "%Y-%m-%d %H:%M:%S")
+    for date_time, entry in entries:
         timestamps.append(date_time)
 
-        # Extracting relevant sensor data
+        # Assuming the indices are mapped correctly to your data structure
         co2 = entry[3]
-        tvoc = entry[4]
+        humidity = entry[4]
         temp = entry[9]
-        humidity = entry[10]
-        air_speed = entry[11] if entry[11] is not None else 0  # defaulting air speed to 0 if null
+        tvoc = entry[10]
+        o3 = entry[12]
+        pm10 = entry[14]
+        pm2_5 = entry[15]
+
+        air_speed = 0.1  # Assuming a constant air speed; modify as necessary
 
         # Calculate AIQ and apparent temperature
-        aiq = calculate_aiq(co2, tvoc)
+        aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
         apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met=1.2, clo=0.5)
 
         aiq_values.append(aiq)
@@ -37,25 +44,28 @@ def process_data(data):
 
     return timestamps, aiq_values, apparent_temps
 
+
 # Function to plot data
-def plot_data(timestamps, aiq_values, apparent_temps, title):
-    fig, ax1 = plt.subplots()
-
-    color = 'tab:red'
-    ax1.set_xlabel('Time')
-    ax1.set_ylabel('AIQ', color=color)
-    ax1.plot(timestamps, aiq_values, color=color)
-    ax1.tick_params(axis='y', labelcolor=color)
-
-    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-    color = 'tab:blue'
-    ax2.set_ylabel('Apparent Temperature (°C)', color=color)
-    ax2.plot(timestamps, apparent_temps, color=color)
-    ax2.tick_params(axis='y', labelcolor=color)
-
+def plot_AIQ(timestamps, aiq_values, title):
+    plt.figure(figsize=(10, 5))
+    plt.plot(timestamps, aiq_values, marker='o', linestyle='-', color='red')  # Continuous line
     plt.title(title)
-    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.xlabel('Time')
+    plt.ylabel('AIQ')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     plt.show()
+
+def plot_temp(timestamps, apparent_temps, title):
+    plt.figure(figsize=(10, 5))
+    plt.plot(timestamps, apparent_temps, marker='o', linestyle='-', color='blue')  # Continuous line
+    plt.title(title)
+    plt.xlabel('Time')
+    plt.ylabel('Apparent Temperature (°C)')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
 
 # Main script to process all files in the directory
 directory_path = 'C:/GitHub Repositories/UAB_EnergyStudy/sensor_data'
@@ -66,6 +76,7 @@ for file_name in files:
     try:
         data = read_sensor_data(file_path)
         timestamps, aiq_values, apparent_temps = process_data(data)
-        plot_data(timestamps, aiq_values, apparent_temps, file_name.replace('.json', ''))
+        plot_AIQ(timestamps, aiq_values, file_name.replace('.json', ''))
+        plot_temp(timestamps,apparent_temps, file_name.replace('.json', ''))
     except Exception as e:
         print(f"Failed to process {file_name}: {e}")
