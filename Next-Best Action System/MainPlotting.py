@@ -39,37 +39,47 @@ def process_data(data):
 
     return timestamps, aiq_values, apparent_temps
 
-def plot_AIQ(timestamps, aiq_values, title):
+def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
     plt.figure(figsize=(10, 5))
-
-    # Convert datetime objects to just time (HH:MM)
     times_of_day = [ts.strftime('%H:%M') for ts in timestamps]
+    plt.plot(times_of_day, temp_values, 'bo-', label='Apparent Temperature')
 
-    # Plot using only the time of day
-    plt.plot(times_of_day, aiq_values, 'ro-', label='AIQ')  # Red color, circle markers, and solid lines
+    # Add horizontal lines for temperature thresholds
+    plt.axhline(y=19, color='g', linestyle='--', label='Min Temp Threshold (19°C)')
+    plt.axhline(y=24, color='b', linestyle='--', label='Max Temp Threshold (24°C)')
 
-    plt.title(title)
-    plt.xlabel('Time of Day')
-    plt.ylabel('AIQ')
-    plt.xticks(rotation=45)  # Rotate labels for better legibility
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
-
-def plot_temp(timestamps, apparent_temps, title):
-
-    plt.figure(figsize=(10, 5))
-
-    times_of_day = [ts.strftime('%H:%M') for ts in timestamps]
-
-    plt.plot(times_of_day, apparent_temps, 'bo-', label='Apparent Temperature')  # Blue color, circle marker, solid line
     plt.title(title)
     plt.xlabel('Time')
-    plt.ylabel('Apparent Temperature (°C)')
+    plt.ylabel('Apparent Temperature')
     plt.xticks(rotation=45)
-    plt.legend()  # This will display the legend using the label defined in plt.plot
+    plt.legend()
     plt.tight_layout()
-    plt.show()
+
+    plot_file_path = os.path.join('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_jpg/TEMP', f"{plot_id}.jpg")
+    plt.savefig(plot_file_path, format='jpg')
+    plt.close()
+
+
+def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
+    plt.figure(figsize=(10, 5))
+    times_of_day = [ts.strftime('%H:%M') for ts in timestamps]
+    plt.plot(times_of_day, aiq_values, 'ro-', label='AIQ')
+
+    # Add horizontal lines for AIQ thresholds
+    plt.axhline(y=25, color='g', linestyle='--', label='Min AIQ Threshold (25)')
+    plt.axhline(y=75, color='b', linestyle='--', label='Max AIQ Threshold (75)')
+
+    plt.title(title)
+    plt.xlabel('Time')
+    plt.ylabel('AIQ')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+
+    plot_file_path = os.path.join('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_jpg/AIQ', f"{plot_id}.jpg")
+    plt.savefig(plot_file_path, format='jpg')
+    plt.close()
+
 
 
 directory_path = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
@@ -80,8 +90,15 @@ for file_name in files:
     try:
         data = read_sensor_data(file_path)
         timestamps, aiq_values, apparent_temps = process_data(data)
-        print(timestamps)
-        plot_AIQ(timestamps, aiq_values, file_name.replace('.json', ''))
-        plot_temp(timestamps, apparent_temps, file_name.replace('.json', ''))
+        
+        # Generate a unique ID or use filename for plot identification
+        plot_id = file_name.replace('.json', '')
+        
+        # Plot and save AIQ
+        plot_and_save_AIQ(timestamps, aiq_values, f"{plot_id} AIQ", plot_id)
+        plot_and_save_TEMP(timestamps, apparent_temps, f"{plot_id} Apparent Temp", plot_id)
+
     except Exception as e:
         print(f"Failed to process {file_name}: {e}")
+
+
