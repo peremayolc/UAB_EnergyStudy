@@ -3,11 +3,14 @@ import os
 from datetime import datetime
 import matplotlib.pyplot as plt
 from ComfortMeasures import calculate_aiq, calculate_apparent_temp, v_relative
-from ExtractData import *
+#from ExtractData import *
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import time
+
+from watchdog.events import LoggingEventHandler
+import hashlib
 
 
 def read_sensor_data(file_path):
@@ -89,39 +92,51 @@ def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
     plt.close()
 
 
-class ChangeHandler(FileSystemEventHandler):
-    """Handle file system events - focusing on modified files."""
-    def on_modified(self, event):
-        if event.is_directory:
-            return
-        if event.src_path.endswith('.jpg'):
-            print(f"JPEG file changed: {event.src_path}")
-            # Add your logic here for what happens when a file is modified
 
-def monitor_folder(path):
-    event_handler = ChangeHandler()
+
+def hash_file_contents(file_path):
+    """ Generate a hash of the file contents """
+    sha256 = hashlib.sha256()
+    with open(file_path, 'rb') as f:
+        for block in iter(lambda: f.read(4096), b""):
+            sha256.update(block)
+    return sha256.hexdigest()
+
+class ContentChangeHandler(FileSystemEventHandler):
+    def __init__(self, directory):
+        self.directory = directory
+        self.file_hashes = {}
+        for file in os.listdir(directory):
+            if file.endswith('.json'):
+                file_path = os.path.join(directory, file)
+                self.file_hashes[file] = hash_file_contents(file_path)
+
+    def on_modified(self, event):
+        if not event.is_directory and event.src_path.endswith('.json'):
+            new_hash = hash_file_contents(event.src_path)
+            file_name = os.path.basename(event.src_path)
+            if self.file_hashes.get(file_name) != new_hash:
+                print(f"Detected content change in: {event.src_path}")
+                self.file_hashes[file_name] = new_hash
+                self.process_file(event.src_path)
+
+    def process_file(self, file_path):
+        # Your existing processing and plotting logic
+        print(f"Processing updated file: {file_path}")
+
+def start_monitoring(path):
+    event_handler = ContentChangeHandler(path)
     observer = Observer()
     observer.schedule(event_handler, path, recursive=False)
     observer.start()
-    return observer
-
-if __name__ == "__main__":
-    # Folders to monitor
-    folder1 = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
-    folder2 = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
-
-    observer1 = monitor_folder(folder1)
-    observer2 = monitor_folder(folder2)
-
-    print("Monitoring started")
-
     try:
         while True:
-            time.sleep(1)
+            time.sleep(10)
     except KeyboardInterrupt:
-        observer1.stop()
-        observer2.stop()
+        observer.stop()
+    observer.join()
 
-    observer1.join()
-    observer2.join()
-
+if __name__ == "__main__":
+    json_directory_path = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
+    start_monitoring(json_directory_path)
+    print('a')
