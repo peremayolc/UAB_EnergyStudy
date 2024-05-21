@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 import matplotlib.pyplot as plt
 from ComfortMeasures import calculate_aiq, calculate_apparent_temp
-
+from ExtractData import *
 
 
 def read_sensor_data(file_path):
@@ -44,9 +44,11 @@ def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
     times_of_day = [ts.strftime('%H:%M') for ts in timestamps]
     plt.plot(times_of_day, temp_values, 'bo-', label='Apparent Temperature')
 
+    plt.ylim(17, 30)
+
     # Add horizontal lines for temperature thresholds
-    plt.axhline(y=19, color='g', linestyle='--', label='Min Temp Threshold (19°C)')
-    plt.axhline(y=24, color='b', linestyle='--', label='Max Temp Threshold (24°C)')
+    plt.axhline(y=19, color='orange', linestyle='--', label='Min Temp Threshold (19°C)')
+    plt.axhline(y=24, color='orange', linestyle='--', label='Max Temp Threshold (24°C)')
 
     plt.title(title)
     plt.xlabel('Time')
@@ -65,9 +67,11 @@ def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
     times_of_day = [ts.strftime('%H:%M') for ts in timestamps]
     plt.plot(times_of_day, aiq_values, 'ro-', label='AIQ')
 
+    plt.ylim(0, 100)
+
     # Add horizontal lines for AIQ thresholds
-    plt.axhline(y=25, color='g', linestyle='--', label='Min AIQ Threshold (25)')
-    plt.axhline(y=75, color='b', linestyle='--', label='Max AIQ Threshold (75)')
+    plt.axhline(y=25, color='orange', linestyle='--', label='Min AIQ Threshold (25)')
+    plt.axhline(y=75, color='orange', linestyle='--', label='Max AIQ Threshold (75)')
 
     plt.title(title)
     plt.xlabel('Time')
