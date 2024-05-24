@@ -2,9 +2,8 @@ import paho.mqtt.client as mqtt
 import json
 from datetime import datetime
 import pytz
-from collections import deque
-import os
-from pymongo import MongoClient
+import psycopg2
+import io
 
 # Initialize dictionaries to store data for each sensor
 sensor_data = {}
@@ -34,10 +33,14 @@ all_possible_variables = [
     "pressure", "temperature", "tvoc", "light_level", "o3", "pir", "pm10", "pm2_5"
 ]
 
-# MongoDB connection setup
-MONGO_URI = "mongodb://localhost:27017/"
-client = MongoClient(MONGO_URI)
-db = client["UABenergy"]
+# PostgreSQL connection
+conn = psycopg2.connect(
+    dbname="postgres",
+    user="postgres",
+    password="a",
+    host="localhost"
+)
+cur = conn.cursor()
 
 # Callback function for message reception
 def on_message(mqttc, userdata, msg):
@@ -87,23 +90,30 @@ def on_message2(mqttc, userdata, msg):
 
             print(data)
 
-            # Save data to MongoDB
-            save_data_to_mongodb(room_name, data)
+            # Save data to PostgreSQL
+            save_data_to_postgresql(device_id, room_name, timestamp, data)
         else:
             print("Error: Unknown device ID")
     except Exception as e:
         print("Error:", e)
 
-def save_data_to_mongodb(sensor_name, data):
-    collection = db[sensor_name.replace(' ', '_')]
-    collection.insert_one(data)
+def save_data_to_postgresql(device_id, room_name, timestamp, data):
+    cur.execute("""
+        INSERT INTO sensor_data (device_id, room_name, timestamp, data)
+        VALUES (%s, %s, %s, %s)
+    """, (device_id, room_name, timestamp, json.dumps(data)))
+    conn.commit()
 
 # MQTT client setup and connection
 mqttc = mqtt.Client()
 mqttc.on_connect = on_connect
 mqttc.on_message = on_message
-
+print("test")
 mqttc.username_pw_set(APPID, PSW)
 mqttc.connect("eu1.cloud.thethings.network", 1883, 60)
-
+print("test2")
 mqttc.loop_forever()
+
+# Don't forget to close the database connection when the application terminates
+cur.close()
+conn.close()
