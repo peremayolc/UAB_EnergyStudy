@@ -14,7 +14,7 @@ def normalize(value, min_val, max_val):
 def calculate_aiq(co2, tvoc, o3=None, PM10=None, PM25=None):
     """Calculate the AIQ index based on the provided sensor data."""
 
-    if o3 is not None or PM10 is not None or PM25 is not None:
+    if o3 is not None or PM10 is not None or PM25 is not None or tvoc is not None:
         # Normalize additional pollutants
         co2_index = normalize(co2, 400, 1100)
         tvoc_index = normalize(tvoc, 50, 1000)
@@ -38,9 +38,10 @@ def calculate_aiq(co2, tvoc, o3=None, PM10=None, PM25=None):
             (PM10_index * PM10_weight) +
             (PM25_index * PM25_weight)
         ) / total_weight
+        return aiq_index
 
     #if only co2 and tvocs
-    else:
+    elif tvoc is not None:
         co2_index = normalize(co2, 400, 1100)
         tvoc_index = normalize(tvoc, 50, 1000)
 
@@ -49,5 +50,11 @@ def calculate_aiq(co2, tvoc, o3=None, PM10=None, PM25=None):
         # Calculate base AIQ index using CO2 and TVOCs
         aiq_index = (co2_index * co2_weight) + (tvoc_index * tvoc_weight)
 
-    return aiq_index
+        return aiq_index
+    
+    else:
+        co2_index = normalize(co2, 400, 1100)
+        aiq_index = (co2_index)
+        return aiq_index
+
 
