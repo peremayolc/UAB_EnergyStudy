@@ -62,9 +62,19 @@ def on_connect(mqttc, mosq, obj, rc):
         print("Subscribed to topic: v3/" + APPID + "/devices/" + appeui + "/up")
 
 # Callback function for detailed message processing
+def save_data_to_file(sensor_name, data):
+    filename = f"{sensor_name.replace(' ', '_')}.json"
+    filepath = os.path.join(data_dir, filename)
+    
+    # Convert deque to a list for JSON serialization
+    data_to_save = list(data)
+    
+    # Write the current deque (max 7 entries) to file
+    with open(filepath, 'w') as file:
+        json.dump(data_to_save, file)
+
 def on_message2(mqttc, userdata, msg):
     payload = json.loads(msg.payload.decode())
-
     try:
         decoded_payload = payload["uplink_message"]["decoded_payload"]
         end_device_ids = payload["end_device_ids"]
@@ -80,12 +90,15 @@ def on_message2(mqttc, userdata, msg):
             if room_name not in sensor_data:
                 sensor_data[room_name] = deque(maxlen=7)
 
-            # Extract all possible variables from the payload
-            data = [timestamp, room_name] + [decoded_payload.get(var, None) for var in all_possible_variables]
-            print(data)
+            # Extract all possible variables from the payload and form a dictionary
+            data_dict = {"timestamp": timestamp, "room_name": room_name}
+            for var in all_possible_variables:
+                data_dict[var] = decoded_payload.get(var, None)
+
+            print(data_dict)
 
             # Append new data to the deque, automatically managing overflow
-            sensor_data[room_name].append(data)
+            sensor_data[room_name].append(data_dict)
 
             # Save to file
             save_data_to_file(room_name, sensor_data[room_name])
@@ -94,16 +107,6 @@ def on_message2(mqttc, userdata, msg):
     except Exception as e:
         print("Error:", e)
 
-def save_data_to_file(sensor_name, data):
-    filename = f"{sensor_name.replace(' ', '_')}.json"
-    filepath = os.path.join(data_dir, filename)
-    
-    # Convert deque to a list for JSON serialization
-    data_to_save = list(data)
-    
-    # Write the current deque (max 7 entries) to file
-    with open(filepath, 'w') as file:
-        json.dump(data_to_save, file)
 
 def load_existing_data():
     # Ensure the directory exists

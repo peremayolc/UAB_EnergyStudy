@@ -16,10 +16,11 @@ import hashlib
 def read_sensor_data(file_path):
     with open(file_path, 'r') as file:
         data = json.load(file)
+    print("Data loaded:", data)  # Add this line to print the loaded data
     return data
 
 def process_data(data):
-    entries = [(datetime.strptime(entry[0], "%Y-%m-%d %H:%M:%S"), entry) for entry in data]
+    entries = [(datetime.strptime(entry['timestamp'], "%Y-%m-%d %H:%M:%S"), entry) for entry in data]
     entries.sort(key=lambda x: x[0])
 
     timestamps = []
@@ -28,23 +29,24 @@ def process_data(data):
 
     for date_time, entry in entries:
         timestamps.append(date_time)
-        co2 = entry[3]
-        humidity = entry[4]
-        temp = entry[9]
-        tvoc = entry[10]
-        o3 = entry[12] if len(entry) > 12 else None
-        pm10 = entry[14] if len(entry) > 14 else None
-        pm2_5 = entry[15] if len(entry) > 15 else None
+        co2 = entry.get('co2')
+        humidity = entry.get('humidity')
+        temp = entry.get('temperature')
+        tvoc = entry.get('tvoc')
+        o3 = entry.get('o3', None)  # Using .get() for optional fields
+        pm10 = entry.get('pm10', None)
+        pm2_5 = entry.get('pm2_5', None)
 
-        air_speed = 0.1
+        air_speed = 0.1  # Assumption
 
         aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
-        apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met=1.2, clo=0.5)
+        apparent_temp = calculate_apparent_temp(temp, humidity, air_speed)
 
         aiq_values.append(aiq)
         apparent_temps.append(apparent_temp)
 
     return timestamps, aiq_values, apparent_temps
+
 
 def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
     plt.figure(figsize=(10, 5))
@@ -91,52 +93,36 @@ def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
     plt.savefig(plot_file_path, format='jpg')
     plt.close()
 
-
-
-
-def hash_file_contents(file_path):
-    """ Generate a hash of the file contents """
-    sha256 = hashlib.sha256()
-    with open(file_path, 'rb') as f:
-        for block in iter(lambda: f.read(4096), b""):
-            sha256.update(block)
-    return sha256.hexdigest()
-
-class ContentChangeHandler(FileSystemEventHandler):
-    def __init__(self, directory):
-        self.directory = directory
-        self.file_hashes = {}
-        for file in os.listdir(directory):
-            if file.endswith('.json'):
-                file_path = os.path.join(directory, file)
-                self.file_hashes[file] = hash_file_contents(file_path)
-
+class JsonFileChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
-        if not event.is_directory and event.src_path.endswith('.json'):
-            new_hash = hash_file_contents(event.src_path)
-            file_name = os.path.basename(event.src_path)
-            if self.file_hashes.get(file_name) != new_hash:
-                print(f"Detected content change in: {event.src_path}")
-                self.file_hashes[file_name] = new_hash
-                self.process_file(event.src_path)
+        # This function is called when a file is modified
+        if event.is_directory:
+            return
+        if event.src_path.endswith('.json'):
+            print(f"Detected change in: {event.src_path}")
+            data = read_sensor_data(event.src_path)
+            timestamps, aiq_values, apparent_temps = process_data(data)
 
-    def process_file(self, file_path):
-        # Your existing processing and plotting logic
-        print(f"Processing updated file: {file_path}")
+            # Extract the plot_id or sensor name from filename
+            plot_id = os.path.basename(event.src_path).split('.')[0]
+
+            # Execute plotting functions
+            plot_and_save_TEMP(timestamps, apparent_temps, f"Apparent Temp for {plot_id}", plot_id)
+            plot_and_save_AIQ(timestamps, aiq_values, f"AIQ for {plot_id}", plot_id)
+
 
 def start_monitoring(path):
-    event_handler = ContentChangeHandler(path)
+    event_handler = JsonFileChangeHandler()
     observer = Observer()
-    observer.schedule(event_handler, path, recursive=False)
+    observer.schedule(event_handler, path, recursive=False)  # Set recursive=True if subdirectories should also be monitored
     observer.start()
     try:
         while True:
-            time.sleep(10)
+            time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
 
 if __name__ == "__main__":
-    json_directory_path = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
-    start_monitoring(json_directory_path)
-    print('a')
+    json_files_directory = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
+    start_monitoring(json_files_directory)

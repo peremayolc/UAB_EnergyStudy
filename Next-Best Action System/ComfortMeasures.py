@@ -1,7 +1,5 @@
 from pythermalcomfort.models import at
 from pythermalcomfort.utilities import v_relative
-import numpy as np
-
 
 # Function to calculate apparent temperature
 def calculate_apparent_temp(tdb, rh, v, met, clo):
