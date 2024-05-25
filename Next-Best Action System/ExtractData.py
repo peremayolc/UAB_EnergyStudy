@@ -4,7 +4,6 @@ from datetime import datetime
 import pytz
 from collections import deque
 import os
-from MainPlotting import *
 # Initialize dictionaries to store data for each sensor
 sensor_data = {}
 
@@ -73,6 +72,9 @@ def save_data_to_file(sensor_name, data):
     # Write the current deque (max 7 entries) to file
     with open(filepath, 'w') as file:
         json.dump(data_to_save, file)
+        file.flush()
+        os.fsync(file.fileno())
+
 
 def on_message2(mqttc, userdata, msg):
     payload = json.loads(msg.payload.decode())
@@ -141,4 +143,8 @@ mqttc.username_pw_set(APPID, PSW)
 mqttc.connect("eu1.cloud.thethings.network", 1883, 60)
 
 
-mqttc.loop_forever()
+try:
+    mqttc.loop_forever()
+except Exception as e:
+    print(f"An error occurred in MQTT loop: {e}")
+

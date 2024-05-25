@@ -11,7 +11,7 @@ import time
 
 from watchdog.events import LoggingEventHandler
 import hashlib
-
+from ExtractData import *
 
 def read_sensor_data(file_path):
     with open(file_path, 'r') as file:
@@ -38,9 +38,12 @@ def process_data(data):
         pm2_5 = entry.get('pm2_5', None)
 
         air_speed = 0.1  # Assumption
+        met = 1.2
+        clo = 0.5
+
 
         aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
-        apparent_temp = calculate_apparent_temp(temp, humidity, air_speed)
+        apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met, clo)
 
         aiq_values.append(aiq)
         apparent_temps.append(apparent_temp)
@@ -112,16 +115,18 @@ class JsonFileChangeHandler(FileSystemEventHandler):
 
 
 def start_monitoring(path):
+    print(f"Starting to monitor: {path}")
     event_handler = JsonFileChangeHandler()
     observer = Observer()
-    observer.schedule(event_handler, path, recursive=False)  # Set recursive=True if subdirectories should also be monitored
+    observer.schedule(event_handler, path, recursive=False)
     observer.start()
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
-    observer.join()
+        observer.join()
+
 
 if __name__ == "__main__":
     json_files_directory = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
