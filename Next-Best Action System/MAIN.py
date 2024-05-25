@@ -1,6 +1,6 @@
 
 from ExtractData import *
-
+import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import time
@@ -42,5 +42,17 @@ def start_monitoring(path):
 
 
 if __name__ == "__main__":
-    json_files_directory = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
-    start_monitoring(json_files_directory)
+    mqtt_client = setup_mqtt()
+
+    # Start MQTT client in a new thread
+    mqtt_thread = threading.Thread(target=start_mqtt_client, args=(mqtt_client,))
+    mqtt_thread.start()
+
+    # Start file monitoring in the main thread or another thread if preferred
+    file_monitoring_thread = threading.Thread(target=start_monitoring, args=('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json',))
+    file_monitoring_thread.start()
+
+    # Optional: Wait for these threads if necessary
+    mqtt_thread.join()
+    file_monitoring_thread.join()
+
