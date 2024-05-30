@@ -4,6 +4,9 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from ComfortMeasures import calculate_aiq, calculate_apparent_temp, v_relative
 import time
+from recommender import *
+# Function to determine the current state based on sensor data
+
 
 def read_sensor_data(file_path):
     retry_count = 0
@@ -44,6 +47,19 @@ def process_data(data):
 
         aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
         apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met, clo)
+
+
+        current_state = determine_state(aiq, apparent_temp, external_temp = 25, external_conditions= 'sunny')
+        if current_state:
+            # Get the top two actions for the current state
+            actions = get_top_actions(current_state)
+            if actions is not None:
+                first_action, second_action = actions
+                print(f"Recommended Actions:\n1. {first_action}\n2. {second_action}")
+            else:
+                print("No recommended actions found for the current state.")
+        else:
+            print("The classroom is within comfort thresholds.")
 
         aiq_values.append(aiq)
         apparent_temps.append(apparent_temp)
