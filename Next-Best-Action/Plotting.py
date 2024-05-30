@@ -51,9 +51,9 @@ def process_data(data):
         aiq_values.append(aiq)
         apparent_temps.append(apparent_temp)
     
-    current_state = determine_state(aiq, apparent_temp, external_temp = 25, external_conditions= 'sunny', illumination = 250)
+    current_state, problem_type  = determine_state(aiq, apparent_temp, external_temp = 25, external_conditions= 'sunny', illumination = 250)
 
-    return timestamps, aiq_values, apparent_temps, current_state
+    return timestamps, aiq_values, apparent_temps, current_state,problem_type
 
 
 def plot_and_save_TEMP(timestamps, temp_values, title, plot_id): #predicted temps and predicted aiq
