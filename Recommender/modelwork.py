@@ -113,8 +113,3 @@ def ComputerRoom_temp(json_file, uni_model_temp = 'Recommender/Models/Unidirecti
 
     with open('last_row.json', 'w') as file:
         file.write(last_row_json)
-
-with open("Next-Best-Action/sensor_data_json/Computer_Room.json", 'r') as f:
-        json_data = json.load(f)
-
-ComputerRoom_temp(json_file = json_data)
