@@ -34,9 +34,16 @@ all_possible_variables = [
 ]
 
 # PostgreSQL connection
+# conn = psycopg2.connect(
+#     dbname="postgres",
+#     user="postgres",
+#     password="a",
+#     host="localhost"
+# )
+
 conn = psycopg2.connect(
-    dbname="postgres",
-    user="postgres",
+    dbname="testdb",
+    user="han",
     password="a",
     host="localhost"
 )
