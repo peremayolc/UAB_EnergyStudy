@@ -16,7 +16,12 @@ class JsonFileChangeHandler(FileSystemEventHandler):
         if event.src_path.endswith('.json'):
             print(f"Detected change in: {event.src_path}")
             data = read_sensor_data(event.src_path)
-            timestamps, aiq_values, apparent_temps = process_data(data)
+
+            #function miguel: input = json actualizado
+                # return json with +1 predcited
+
+            timestamps, aiq_values, apparent_temps = process_data(data) #devolver predicted data de las functiones de miguel
+                        #aiq_predicted  #apparent_predicted         #current and #data +1
 
             # Extract the plot_id or sensor name from filename
             plot_id = os.path.basename(event.src_path).split('.')[0]

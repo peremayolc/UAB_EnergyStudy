@@ -38,7 +38,9 @@ def process_data(data):
         air_speed = 0.1  # Assumption
         met = 1.2
         clo = 0.5
-
+        
+        #predicted aiq = funcion miguel
+        #predicted apparent = function miguel
 
         aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
         apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met, clo)
@@ -49,7 +51,7 @@ def process_data(data):
     return timestamps, aiq_values, apparent_temps
 
 
-def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
+def plot_and_save_TEMP(timestamps, temp_values, title, plot_id): #predicted temps and predicted aiq
     plt.figure(figsize=(10, 5))
     times_of_day = [ts.strftime('%H:%M') for ts in timestamps]
     plt.plot(times_of_day, temp_values, 'bo-', label='Apparent Temperature')
