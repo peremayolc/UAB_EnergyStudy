@@ -48,23 +48,12 @@ def process_data(data):
         aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
         apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met, clo)
 
-
-        current_state = determine_state(aiq, apparent_temp, external_temp = 25, external_conditions= 'sunny')
-        if current_state:
-            # Get the top two actions for the current state
-            actions = get_top_actions(current_state)
-            if actions is not None:
-                first_action, second_action = actions
-                print(f"Recommended Actions:\n1. {first_action}\n2. {second_action}")
-            else:
-                print("No recommended actions found for the current state.")
-        else:
-            print("The classroom is within comfort thresholds.")
-
         aiq_values.append(aiq)
         apparent_temps.append(apparent_temp)
+    
+    current_state = determine_state(aiq, apparent_temp, external_temp = 25, external_conditions= 'sunny', illumination = 250)
 
-    return timestamps, aiq_values, apparent_temps
+    return timestamps, aiq_values, apparent_temps, current_state
 
 
 def plot_and_save_TEMP(timestamps, temp_values, title, plot_id): #predicted temps and predicted aiq

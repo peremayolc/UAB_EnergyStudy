@@ -20,15 +20,25 @@ class JsonFileChangeHandler(FileSystemEventHandler):
             #function miguel: input = json actualizado
                 # return json with +1 predcited
 
-            timestamps, aiq_values, apparent_temps = process_data(data) #devolver predicted data de las functiones de miguel
+            timestamps, aiq_values, apparent_temps, current_state = process_data(data) #devolver predicted data de las functiones de miguel
                         #aiq_predicted  #apparent_predicted         #current and #data +1
-
             # Extract the plot_id or sensor name from filename
             plot_id = os.path.basename(event.src_path).split('.')[0]
 
             # Execute plotting functions
             plot_and_save_TEMP(timestamps, apparent_temps, f"Apparent Temp for {plot_id}", plot_id)
             plot_and_save_AIQ(timestamps, aiq_values, f"AIQ for {plot_id}", plot_id)
+
+            if current_state:
+                # Get the top two actions for the current state
+                actions = get_top_actions(current_state)
+                if actions is not None:
+                    first_action, second_action = actions
+                    print(f"Recommended Actions:\n1. {first_action}\n2. {second_action}")
+                else:
+                    print("No recommended actions found for the current state.")
+            else:
+                print("The classroom is within comfort thresholds.")
 
 
 def start_monitoring(path):
