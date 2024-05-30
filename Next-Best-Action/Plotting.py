@@ -4,7 +4,6 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from ComfortMeasures import calculate_aiq, calculate_apparent_temp, v_relative
 import time
-from drive_upload import authenticate_drive, upload_file, upload_folder
 
 def read_sensor_data(file_path):
     retry_count = 0
@@ -40,6 +39,7 @@ def process_data(data):
         met = 1.2
         clo = 0.5
 
+
         aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
         apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met, clo)
 
@@ -47,6 +47,7 @@ def process_data(data):
         apparent_temps.append(apparent_temp)
 
     return timestamps, aiq_values, apparent_temps
+
 
 def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
     plt.figure(figsize=(10, 5))
@@ -70,7 +71,6 @@ def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
     plt.savefig(plot_file_path, format='jpg')
     plt.close()
 
-    return plot_file_path
 
 def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
     plt.figure(figsize=(10, 5))
@@ -93,5 +93,3 @@ def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
     plot_file_path = os.path.join('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/sensor_data_jpg/AIQ', f"{plot_id}.jpg")
     plt.savefig(plot_file_path, format='jpg')
     plt.close()
-
-    return plot_file_path
