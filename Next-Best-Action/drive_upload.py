@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
 # Path to your service account credentials file
-CREDENTIALS_FILE = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/uab-study-1c3d68af355c.json'
+CREDENTIALS_FILE = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/uab-study-1c3d68af355c.json'
 
 def authenticate_drive():
     credentials = service_account.Credentials.from_service_account_file(
@@ -26,16 +26,29 @@ def create_folder(service, folder_name, parent_folder_id=None):
     print(f"Folder '{folder_name}' created with ID: {folder.get('id')}")
     return folder.get('id')
 
+def find_file(service, folder_id, file_name):
+    query = f"'{folder_id}' in parents and name='{file_name}' and mimeType='image/jpeg' and trashed=false"
+    results = service.files().list(q=query, fields="files(id, name)").execute()
+    items = results.get('files', [])
+    return items[0] if items else None
+
 def upload_file(service, file_path, folder_id):
     file_name = os.path.basename(file_path)
+    existing_file = find_file(service, folder_id, file_name)
     file_metadata = {
         'name': file_name,
         'parents': [folder_id]
     }
-
     media = MediaFileUpload(file_path, mimetype='image/jpeg')
-    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-    print(f"Upload Successful: {file_name}, File ID: {file.get('id')}")
+    
+    if existing_file:
+        # Update the existing file
+        file = service.files().update(fileId=existing_file['id'], media_body=media).execute()
+        print(f"Updated: {file_name}, File ID: {file.get('id')}")
+    else:
+        # Create a new file
+        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        print(f"Upload Successful: {file_name}, File ID: {file.get('id')}")
     return file.get('id')
 
 def upload_folder(service, folder_path, parent_folder_id=None):

@@ -57,11 +57,11 @@ if __name__ == "__main__":
     # Authenticate and get the Google Drive client
     drive_service = authenticate_drive()
 
-    # Optional: specify a Google Drive folder ID where you want to save the files
-    folder_id = 'https://drive.google.com/drive/u/0/folders/1PuFfVamE2cC-9mfCxCM9BpEcC4NLttg-'  # Replace with your folder ID
+    # Specify the correct Google Drive folder ID where you want to save the files
+    folder_id = '1PuFfVamE2cC-9mfCxCM9BpEcC4NLttg-'  # Replace with your actual folder ID
 
     # Start file monitoring in the main thread or another thread if preferred
-    file_monitoring_thread = threading.Thread(target=start_monitoring, args=('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json', drive_service, folder_id))
+    file_monitoring_thread = threading.Thread(target=start_monitoring, args=('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/sensor_data_json', drive_service, folder_id))
     file_monitoring_thread.start()
 
     # Optional: Wait for these threads if necessary

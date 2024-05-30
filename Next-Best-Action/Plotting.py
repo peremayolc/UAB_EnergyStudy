@@ -66,7 +66,7 @@ def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
     plt.legend()
     plt.tight_layout()
 
-    plot_file_path = os.path.join('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_jpg/TEMP', f"{plot_id}.jpg")
+    plot_file_path = os.path.join('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/sensor_data_jpg/TEMP', f"{plot_id}.jpg")
     plt.savefig(plot_file_path, format='jpg')
     plt.close()
 
@@ -90,7 +90,7 @@ def plot_and_save_AIQ(timestamps, aiq_values, title, plot_id):
     plt.legend()
     plt.tight_layout()
 
-    plot_file_path = os.path.join('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_jpg/AIQ', f"{plot_id}.jpg")
+    plot_file_path = os.path.join('C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/sensor_data_jpg/AIQ', f"{plot_id}.jpg")
     plt.savefig(plot_file_path, format='jpg')
     plt.close()
 

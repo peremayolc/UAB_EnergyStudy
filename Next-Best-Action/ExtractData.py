@@ -35,7 +35,7 @@ def setup_mqtt():
 
     # Co2 / Humid / ( illum or light ) / temp / tvoc / o3 / pm10 / pm2.5
     # Create a directory for storing sensor data files
-    data_dir = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best Action System/sensor_data_json'
+    data_dir = 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/sensor_data_json'
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
