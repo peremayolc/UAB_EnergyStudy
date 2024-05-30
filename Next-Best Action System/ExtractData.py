@@ -17,8 +17,8 @@ def setup_mqtt():
     # Sensor name mapping
     sensors_name = {
         "q4-1003-7456": "Q4-1003",
-        "eui-24e124128c147470": "UNKNOWN",
-        "eui-24e124128c147446": "UNKNOWN",
+        "eui-24e124128c147470": "UNKNOWN1",
+        "eui-24e124128c147446": "UNKNOWN2",
         "eui-24e124710c408089": "OpenLab - Laser Room",
         "eui-24e124128c147500": "OpenLab - Main Room",
         "eui-24e124128c147204": "DigitalLab",
@@ -92,7 +92,7 @@ def setup_mqtt():
 
                 # Create a deque for the room if it does not exist
                 if room_name not in sensor_data:
-                    sensor_data[room_name] = deque(maxlen=15)
+                    sensor_data[room_name] = deque(maxlen=14)
 
                 # Extract all possible variables from the payload and form a dictionary
                 data_dict = {"timestamp": timestamp, "room_name": room_name}
@@ -126,7 +126,7 @@ def setup_mqtt():
                     data = json.load(file)
                     # Ensure the deque for each sensor is initialized properly
                     if sensor_name not in sensor_data:
-                        sensor_data[sensor_name] = deque(maxlen=7)
+                        sensor_data[sensor_name] = deque(maxlen=14)
                     # Load the data into the deque
                     for item in data:
                         sensor_data[sensor_name].append(item)

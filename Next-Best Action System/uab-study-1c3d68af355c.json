@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "uab-study",
+  "private_key_id": "1c3d68af355c30892f7929b01dd763843c67c947",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7kmmk97MXcqol\nxHBNIIAyc0cLSZSH3fbx0F3kEb/MYnsX39G4haTYoFMJwdWnPxq4J0nHjD79fjMq\nXJOZVrCwmoELqQfow2TmYZDFMcI6sGTY3GgFDyXXABUOs6+m8Z5/L4USkDnGlCpb\nazUFREf1iF+jEioWIcLPTH7/6wy/3bXl38Tz7lBgS6D0wH/wh41nO0khpqGSSyQk\nZf7CPlYeVP+5mpY3k0/BLAAJ1RalWAFfWy8PTjR5I38rsBB6FzKJQlAm1cM6Tht0\np8GX6ekT6NOgPTQEHIOqWv+lG+MPvToxJIIIgqVdU9fPbzMBOLtbUNHeXsC/9Fxj\nBXU0GwwZAgMBAAECggEACD5VysSBGDN3o1vIBLe8Mptq4KXd83+vke6Spcqa55Bf\ncQvq42VqOoQHSjs82NIW6kd9wFmbThg9BuxVJ0zOTKCpsbm+yX3G4jIhAu2eJ+an\nM/mxz6EcDGAqTMBcZKWjTdsoicmRZHcQCn8CcEYRNIsHCvtqIplevq4Ruc0afRcd\n2bmUy6IQkOywnUOgjmNVP57ORuI085pHgGCYifeEfc965khB/cp4QF5/GJnS4F4h\nn0jbaWyiPBTBvxG3lic6ubkHx8FD6NrAMLl+SjHdGa9bRB09qQHD91JKYqacjFa1\noDdYPCqz+UB/WlctkwnVjeFGHeHKKEyD085qxRg0tQKBgQDhj1oN9vM2vlcR8fWi\njlQvHz15ibS3DxlWJDwn7fmTU1M7KC1oZMt11Rg0yRgRRAzlYQM/VO/MSFjI6bfa\n0rTWuivG5AaVslCXvyE+SX5q7mYex9VRmMaiPoNjCwt0/8u4fCCIfkR9219HOsNc\nMp6g3nAQUJtu7qDk/J+5lboQfQKBgQDU4qZJtkQe2vjX/IbuW8nxbZsHU9GqtnVe\nCncKOBlvXv8gjxoBn3SLKmIZ8tGkuhtynZ7S7X5eLCBXkfzzbTpUFJ1kD6HEZXfJ\n7WpWF/G+Zz32EILspAxbIuR1eiJHAOCZpRvBO5alMIrxQOAymiAx2DJIWbWKHbQ/\nLSLdgOq4zQKBgGtn3oL9z8yGkGF8LPJOAeo6XwSLvSDaML9jG74LxKcRq3Vk6VJn\nhLbEVPV1uF8oX1eufWRf5pwI6zYojKLHaNNC7WuU00nfEh9gJM1LI8Z5ZOlNUNe8\n/wDs8ZVtAfShhXmAqeE09xpTJqh9Y994Py7tHMG4EHufZ8ACR3CQynvlAoGBANHb\noCtYBu0X1WktomIEkB10e/gMM8sC1M5gqJqlVMWKMxyIlQ12gC/UFyMXUHz/jaE+\nKlwqDIGPJE7PNjlNuss6CzGhi0mM8TpY1ZOLRR76rYUNH9NhoGCTE/2O6Y1vGvm7\nXpHtSQMMyFstJhYcA5K/WkoiTSibQZ1pxE3xEPIdAoGASzCdNSx1GvI6qg9cfFMh\n+T1A/WN+BhvPRb8BlpX9zQkNX0KMqGE8Dd2AYhND/hB/8PWdIo7ERZ2ZPQH6pZZM\nlQ/mj3KqZI6o12Hw/YxaM1sm9hH6ZQlpN+koyLT+1kRzyh5Aflnb1wOb+VTEHYEb\njDyLaLpWSiWL8X3Z9YZ8O3A=\n-----END PRIVATE KEY-----\n",
+  "client_email": "uab-study@uab-study.iam.gserviceaccount.com",
+  "client_id": "109817529017724827972",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/uab-study%40uab-study.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
