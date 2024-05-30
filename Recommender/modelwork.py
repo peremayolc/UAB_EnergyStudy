@@ -9,7 +9,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import MeanSquaredError
 
 
-def ComputerRoom_temp(json_file = "Next-Best-Action/sensor_data_json/Computer_Room.json", uni_model_temp = 'Recommender/Models/Unidirectional 1 LSTM model.h5', df_train_file = 'Recommender/csv_train/Computer_Room_train_temp.csv'):
+def ComputerRoom_temp(json_file, uni_model_temp = 'Recommender/Models/Unidirectional 1 LSTM model.h5', df_train_file = 'Recommender/csv_train/Computer_Room_train_temp.csv'):
 
     ComputerRoom_json = pd.DataFrame(json_file)
     ComputerRoom_json['timestamp'] = pd.to_datetime(ComputerRoom_json['timestamp'])
@@ -48,6 +48,7 @@ def ComputerRoom_temp(json_file = "Next-Best-Action/sensor_data_json/Computer_Ro
         return None
 
     ComputerRoom_json['RS_outdoor'] = ComputerRoom_json.apply(get_radiation_value, axis=1)
+    ComputerRoom_json = ComputerRoom_json.fillna(0)
     #print(ComputerRoom_json)
 
     #TM COLUMN
@@ -79,6 +80,7 @@ def ComputerRoom_temp(json_file = "Next-Best-Action/sensor_data_json/Computer_Ro
         return None
 
     ComputerRoom_json['TM_outdoor'] = ComputerRoom_json.apply(get_temperature_value, axis=1)
+    ComputerRoom_json['TM_outdoor'].fillna(method='ffill', inplace=True)
     ComputerRoom_json = ComputerRoom_json[['Month', 'Hour', 'Minutes', 'light_level','RS_outdoor','TM_outdoor','temperature']]
     #print(ComputerRoom_json)
 
