@@ -7,6 +7,7 @@ import time
 from Plotting import *
 from ComfortMeasures import *
 
+
 class JsonFileChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         # This function is called when a file is modified
@@ -16,7 +17,9 @@ class JsonFileChangeHandler(FileSystemEventHandler):
         if event.src_path.endswith('.json'):
             print(f"Detected change in: {event.src_path}")
             data = read_sensor_data(event.src_path)
-            timestamps, aiq_values, apparent_temps = process_data(data)
+
+            timestamps, aiq_values, apparent_temps, current_state, problem_type = process_data(data) #devolver predicted data de las functiones de miguel
+                        #aiq_predicted  #apparent_predicted         #current and #data +1
 
             # Extract the plot_id or sensor name from filename
             plot_id = os.path.basename(event.src_path).split('.')[0]
@@ -24,6 +27,21 @@ class JsonFileChangeHandler(FileSystemEventHandler):
             # Execute plotting functions
             plot_and_save_TEMP(timestamps, apparent_temps, f"Apparent Temp for {plot_id}", plot_id)
             plot_and_save_AIQ(timestamps, aiq_values, f"AIQ for {plot_id}", plot_id)
+
+            if current_state:
+                # Get the top two actions for the current state
+                actions = get_top_actions(current_state)
+                if problem_type == 'AIQ Threshold Problem':
+                    if actions is not None:
+                        first_action, second_action = actions
+                        save_recommendations(plot_id, problem_type, first_action, second_action)
+                elif problem_type == 'Temperature Low Problem' or 'Temperature High Problem':
+                    if actions is not None:
+                        first_action, second_action = actions
+                        save_recommendations(plot_id, problem_type, first_action, second_action)
+                
+            else:
+                save_recommendations(plot_id, 'In the correct comfort Range', None, None)
 
 
 def start_monitoring(path):

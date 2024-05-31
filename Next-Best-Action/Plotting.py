@@ -4,6 +4,9 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from ComfortMeasures import calculate_aiq, calculate_apparent_temp, v_relative
 import time
+from recommender import *
+# Function to determine the current state based on sensor data
+
 
 def read_sensor_data(file_path):
     retry_count = 0
@@ -28,28 +31,33 @@ def process_data(data):
     for date_time, entry in entries:
         timestamps.append(date_time)
         co2 = entry.get('co2')
+        print(co2)
         humidity = entry.get('humidity')
         temp = entry.get('temperature')
         tvoc = entry.get('tvoc')
-        o3 = entry.get('o3', None)  # Using .get() for optional fields
-        pm10 = entry.get('pm10', None)
-        pm2_5 = entry.get('pm2_5', None)
+        o3 = entry.get('o3')  # Using .get() for optional fields
+        pm10 = entry.get('pm10')
+        pm2_5 = entry.get('pm2_5')
 
         air_speed = 0.1  # Assumption
         met = 1.2
         clo = 0.5
-
+        
+        #predicted aiq = funcion miguel
+        #predicted apparent = function miguel
 
         aiq = calculate_aiq(co2, tvoc, o3, pm10, pm2_5)
         apparent_temp = calculate_apparent_temp(temp, humidity, air_speed, met, clo)
 
         aiq_values.append(aiq)
         apparent_temps.append(apparent_temp)
+    
+    current_state, problem_type  = determine_state(aiq, apparent_temp, external_temp = 25, external_conditions= 'sunny', illumination = 250)
 
-    return timestamps, aiq_values, apparent_temps
+    return timestamps, aiq_values, apparent_temps, current_state, problem_type
 
 
-def plot_and_save_TEMP(timestamps, temp_values, title, plot_id):
+def plot_and_save_TEMP(timestamps, temp_values, title, plot_id): #predicted temps and predicted aiq
     plt.figure(figsize=(10, 5))
     times_of_day = [ts.strftime('%H:%M') for ts in timestamps]
     plt.plot(times_of_day, temp_values, 'bo-', label='Apparent Temperature')
