@@ -7,6 +7,8 @@ import time
 from Plotting import *
 from ComfortMeasures import *
 
+from modelwork import *
+
 class JsonFileChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         # This function is called when a file is modified
@@ -20,8 +22,14 @@ class JsonFileChangeHandler(FileSystemEventHandler):
             #function miguel: input = json actualizado
                 # return json with +1 predcited
 
+            if event.src_path == 'C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/sensor_data_json/Computer_Room.json':
+                ComputerRoom_temp(json_file = data)
+
             timestamps, aiq_values, apparent_temps, current_state, problem_type = process_data(data) #devolver predicted data de las functiones de miguel
                         #aiq_predicted  #apparent_predicted         #current and #data +1
+
+            
+            
             # Extract the plot_id or sensor name from filename
             plot_id = os.path.basename(event.src_path).split('.')[0]
 
@@ -32,11 +40,19 @@ class JsonFileChangeHandler(FileSystemEventHandler):
             if current_state:
                 # Get the top two actions for the current state
                 actions = get_top_actions(current_state)
-                if actions is not None:
-                    first_action, second_action = actions
-                    print(f"Recommended Actions:\n1. {first_action}\n2. {second_action}")
-                else:
-                    print("No recommended actions found for the current state.")
+                if problem_type == 'AIQ Threshold Problem':
+                    if actions is not None:
+                        first_action, second_action = actions
+                        print(f"Recommended Actions:\n1. {first_action}\n2. {second_action}")
+                    else:
+                        print("No recommended actions found for the current state.")
+                if problem_type == 'Temperature Low Problem' or 'Temperature High Problem':
+                    if actions is not None:
+                        first_action, second_action = actions
+                        print(f"Recommended Actions:\n1. {first_action}\n2. {second_action}")
+                    else:
+                        print("No recommended actions found for the current state.")
+
             else:
                 print("The classroom is within comfort thresholds.")
 
