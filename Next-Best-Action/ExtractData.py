@@ -3,10 +3,19 @@ import json
 from datetime import datetime
 import pytz
 from collections import deque
+import psycopg2
 import os
 # Initialize dictionaries to store data for each sensor
 def setup_mqtt():
     sensor_data = {}
+
+    conn = psycopg2.connect(
+        dbname="testdb",
+        user="han",
+        password="a",
+        host="localhost"
+    )
+    cur = conn.cursor()
 
     # Application information
     APPID = "sensors-openlab@ttn"
@@ -76,6 +85,12 @@ def setup_mqtt():
             file.flush()
             os.fsync(file.fileno())
 
+    def save_data_to_postgresql(device_id, room_name, timestamp, data):
+        cur.execute("""
+            INSERT INTO sensor_data (device_id, room_name, timestamp, data)
+            VALUES (%s, %s, %s, %s)
+        """, (device_id, room_name, timestamp, json.dumps(data)))
+        conn.commit()
 
     def on_message2(mqttc, userdata, msg):
         payload = json.loads(msg.payload.decode())
@@ -103,14 +118,20 @@ def setup_mqtt():
 
                 # Append new data to the deque, automatically managing overflow
                 sensor_data[room_name].append(data_dict)
-
+                data = {
+                "timestamp": timestamp,
+                "room_name": room_name,
+                }
+                for var in all_possible_variables:
+                    data[var] = decoded_payload.get(var, None)
                 # Save to file
                 save_data_to_file(room_name, sensor_data[room_name])
+                save_data_to_postgresql(device_id, room_name, timestamp, data)
             else:
                 print("Error: Unknown device ID")
         except Exception as e:
             print("Error:", e)
-
+    
 
     def load_existing_data():
         # Ensure the directory exists

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "expo": "^51.0.9",
     "mongoose": "^8.4.0",
     "pg": "^8.11.5"
   }
