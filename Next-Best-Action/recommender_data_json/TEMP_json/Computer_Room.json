@@ -1,0 +1,7 @@
+{
+    "problem_type": "Temperature High Problem",
+    "recommended_actions": {
+        "first_action": "Obrir les finestres",
+        "second_action": "Obrir les portes"
+    }
+}

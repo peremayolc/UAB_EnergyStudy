@@ -11,25 +11,22 @@ def normalize(value, min_val, max_val):
     """Normalize the value on a scale of 0 to 100."""
     return ((value - min_val) / (max_val - min_val)) * 100
 
-def calculate_aiq(co2, tvoc, o3=None, PM10=None, PM25=None):
+def calculate_aiq(co2, tvoc=None, o3=None, PM10=None, PM25=None):
     """Calculate the AIQ index based on the provided sensor data."""
-
-    if o3 is not None or PM10 is not None or PM25 is not None or tvoc is not None:
-        # Normalize additional pollutants
+    # Scenario: sensors with CO2, TVOC, O3, PM10, and PM25
+    if o3 is not None and PM10 is not None and PM25 is not None and tvoc is not None and co2 is not None:
         co2_index = normalize(co2, 400, 1100)
         tvoc_index = normalize(tvoc, 50, 1000)
-        o3_index = normalize(o3, 0, 200) if o3 is not None else 0
-        PM10_index = normalize(PM10, 0, 100) if PM10 is not None else 0
-        PM25_index = normalize(PM25, 0, 60) if PM25 is not None else 0
+        o3_index = normalize(o3, 0, 200)
+        PM10_index = normalize(PM10, 0, 100)
+        PM25_index = normalize(PM25, 0, 60)
 
-        # Weights for additional pollutants
         co2_weight = 0.2
         tvoc_weight = 0.2
         o3_weight = 0.2
         PM10_weight = 0.2
         PM25_weight = 0.2
 
-        # Calculate combined AIQ index
         total_weight = co2_weight + tvoc_weight + o3_weight + PM10_weight + PM25_weight
         aiq_index = (
             (co2_index * co2_weight) +
@@ -40,21 +37,18 @@ def calculate_aiq(co2, tvoc, o3=None, PM10=None, PM25=None):
         ) / total_weight
         return aiq_index
 
-    #if only co2 and tvocs
+    # Scenario: sensors with CO2 and TVOC only
     elif tvoc is not None:
         co2_index = normalize(co2, 400, 1100)
         tvoc_index = normalize(tvoc, 50, 1000)
 
         co2_weight = 0.6
         tvoc_weight = 0.4
-        # Calculate base AIQ index using CO2 and TVOCs
-        aiq_index = (co2_index * co2_weight) + (tvoc_index * tvoc_weight)
 
+        aiq_index = (co2_index * co2_weight) + (tvoc_index * tvoc_weight)
         return aiq_index
-    
+
+    # Scenario: sensor with CO2 only
     else:
         co2_index = normalize(co2, 400, 1100)
-        aiq_index = (co2_index)
-        return aiq_index
-
-
+        return co2_index

@@ -31,12 +31,13 @@ def process_data(data):
     for date_time, entry in entries:
         timestamps.append(date_time)
         co2 = entry.get('co2')
+        print(co2)
         humidity = entry.get('humidity')
         temp = entry.get('temperature')
         tvoc = entry.get('tvoc')
-        o3 = entry.get('o3', None)  # Using .get() for optional fields
-        pm10 = entry.get('pm10', None)
-        pm2_5 = entry.get('pm2_5', None)
+        o3 = entry.get('o3')  # Using .get() for optional fields
+        pm10 = entry.get('pm10')
+        pm2_5 = entry.get('pm2_5')
 
         air_speed = 0.1  # Assumption
         met = 1.2
@@ -53,7 +54,7 @@ def process_data(data):
     
     current_state, problem_type  = determine_state(aiq, apparent_temp, external_temp = 25, external_conditions= 'sunny', illumination = 250)
 
-    return timestamps, aiq_values, apparent_temps, current_state,problem_type
+    return timestamps, aiq_values, apparent_temps, current_state, problem_type
 
 
 def plot_and_save_TEMP(timestamps, temp_values, title, plot_id): #predicted temps and predicted aiq

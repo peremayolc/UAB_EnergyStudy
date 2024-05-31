@@ -9,7 +9,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import MeanSquaredError
 
 
-def ComputerRoom_temp(json_file, uni_model_temp = 'Recommender/Models/Unidirectional 1 LSTM model.h5', df_train_file = 'Recommender/csv_train/Computer_Room_train_temp.csv'):
+def ComputerRoom_temp(json_file, uni_model_temp = 'C:/GitHub Repositories/UAB_EnergyStudy/Recommender/Models/Unidirectional 1 LSTM model.h5', df_train_file = 'C:/GitHub Repositories/UAB_EnergyStudy/Recommender/csv_train/Computer_Room_train_temp.csv'):
 
     ComputerRoom_json = pd.DataFrame(json_file)
     ComputerRoom_json['timestamp'] = pd.to_datetime(ComputerRoom_json['timestamp'])

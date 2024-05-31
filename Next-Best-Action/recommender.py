@@ -1,8 +1,18 @@
 import pandas as pd
+import os
+import json
 
 # Load the CSV file
 file_path = "C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/top_two_actions.csv"
 top_two_actions_df = pd.read_csv(file_path, index_col=0)
+
+# Function to clean the action strings
+def clean_action(action):
+    return action.split("'")[1]
+
+# Apply the cleaning function to the DataFrame
+top_two_actions_df['First Action'] = top_two_actions_df['First Action'].apply(clean_action)
+top_two_actions_df['Second Action'] = top_two_actions_df['Second Action'].apply(clean_action)
 
 # Define thresholds
 AIQ_THRESHOLD = 75
@@ -51,3 +61,38 @@ def get_top_actions(state):
         return top_two_actions_df.loc[state]
     else:
         return None
+
+# Function to save recommendations to JSON
+def save_recommendations(sensor_name, problem_type, first_action, second_action):
+    # Define the base directory
+    base_dir = "C:/GitHub Repositories/UAB_EnergyStudy/Next-Best-Action/recommender_data_json"
+    
+    # Define subdirectory based on problem type
+    if problem_type == "AIQ Threshold Problem":
+        sub_dir = "AIQ_json"
+    elif problem_type in ["Temperature High Problem", "Temperature Low Problem"]:
+        sub_dir = "TEMP_json"
+    else:
+        sub_dir = "OTHER_json"  # You can add more categories if needed
+    
+    # Create full directory path
+    full_dir_path = os.path.join(base_dir, sub_dir)
+    
+    # Ensure the directory exists
+    os.makedirs(full_dir_path, exist_ok=True)
+    
+    # Define the full file path
+    file_path = os.path.join(full_dir_path, f"{sensor_name}.json")
+    
+    # Create the data to save
+    data = {
+        "problem_type": problem_type,
+        "recommended_actions": {
+            "first_action": first_action,
+            "second_action": second_action
+        }
+    }
+    
+    # Save data to JSON file
+    with open(file_path, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
