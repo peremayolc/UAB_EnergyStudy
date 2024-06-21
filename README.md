@@ -13,22 +13,23 @@ The first one is to make predictions on the expenditure for energy in different 
 ## Application Overview
 This application monitors and analyzes environmental conditions in various rooms using sensor data. It processes the data with Python, stores it in PostgreSQL, and visualizes it using Grafana. The backend is managed with Express.js and hosted on Microsoft Azure. The mobile app interface is developed with React Native.
 
-<b>Main Features</b>
+### Main Features</b>
 1. Continuous data collection from sensors.
 2. Real-time processing and storage of data in PostgreSQL.
 3. Visualization of data through Grafana integrated into the mobile app.
 
 ### GET API to Database
-<img width="325" alt="image (1)" src="https://github.com/peremayolc/UAB_EnergyStudy/assets/80913049/ed52f0c6-2b85-44ed-a0bc-5b7034f0ebaf">
+<img src="https://github.com/peremayolc/UAB_EnergyStudy/assets/80913049/ed52f0c6-2b85-44ed-a0bc-5b7034f0ebaf.png" 
+width="200" /><br>
 http://4.233.217.219:3000/data?room_name=Q4-1003
 
 ### Home Screen
-![Simulator Screenshot - iPhone 15 Pro Max - 2024-05-30 at 22 32 48](https://github.com/peremayolc/UAB_EnergyStudy/assets/80913049/4656951b-2f33-49bc-970c-aef64eb1c152)
+<img src="https://github.com/peremayolc/UAB_EnergyStudy/assets/80913049/4656951b-2f33-49bc-970c-aef64eb1c152.png" width="200" /><br>
 Displays real-time environmental data for multiple rooms.
 
 
 ### Recommendation System
-![image](https://github.com/peremayolc/UAB_EnergyStudy/assets/80913049/068744ce-c13f-4f28-b314-0afe1b8b7199)
+<img src="https://github.com/peremayolc/UAB_EnergyStudy/assets/80913049/068744ce-c13f-4f28-b314-0afe1b8b7199.png" width="200" /><br>
 Offers real-time suggestions for maintaining optimal room conditions.
 
 
