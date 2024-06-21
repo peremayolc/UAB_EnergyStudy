@@ -37,34 +37,44 @@ Offers real-time suggestions for maintaining optimal room conditions.
 <b>Backend</b>
 
 Python: Data processing and analysis.
+
 PostgreSQL: Data storage.
+
 Express.js: API server for data communication.
+
 Microsoft Azure: Hosting and infrastructure.
 
 <b>Frontend</b>
 
 React Native: Mobile app development.
+
 Grafana: Data visualization.
 
 
 ### How to Run
 1. Clone the Repository:
 
+```
 git clone https://github.com/peremayolc/UAB_EnergyStudy.git
 cd UAB_EnergyStudy
+```
 
 2. Backend Setup:
 
 Set up a PostgreSQL database.
+
 Connect Database in python file(ExtractData.py).
+
 Run the Express.js server.
 
 3. Frontend Setup:
 
 Install required libraries.
+```
 pip install -r requirements.txt
-
+```
 Install react and Configure expo
 
 Start
+
 npx expo start
