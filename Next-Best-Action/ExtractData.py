@@ -5,6 +5,9 @@ import pytz
 from collections import deque
 import psycopg2
 import os
+from dotenv import load_dotenv
+load_dotenv()
+password = os.getenv('DB_PASSWORD')
 # Initialize dictionaries to store data for each sensor
 def setup_mqtt():
     sensor_data = {}
@@ -12,7 +15,7 @@ def setup_mqtt():
     conn = psycopg2.connect(
         dbname="testdb",
         user="han",
-        password="a",
+        password=password,
         host="localhost"
     )
     cur = conn.cursor()
