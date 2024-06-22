@@ -6,15 +6,15 @@ The notebook containing everything is named [Project Final Sarima](https://githu
 
 The second folder, named [Random Forest Regressor](https://github.com/peremayolc/UAB_EnergyStudy/tree/main/Predictions/Random%20Forest%20Regressor) contains everything on how we created the model for rfr. Here you can also find results and procedures followed during the process. Some plots were included to show important information we got and used along the way. It is separated between two folders, each contain the same things and the jupyter notebook for both is the same, the difference is the date used to split the training and test data. Here are both folders and the files that they contain:
 1.[First Split](https://github.com/peremayolc/UAB_EnergyStudy/tree/main/Predictions/Random%20Forest%20Regressor/SPLIT1), here you can find the results after using "2021-09-09" to split the data:
-1.1. The [jupyter notebook](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/project_final_RFR.ipynb). Containing the steps on how we treated the data, trained the model and showcased the results.
-1.2. The [split used](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/test_train%20split.png).
-1.3. [Predictions](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/PREDICTIONS.png) graphically represented.
-1.4. A [.csv file](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/data.csv) containing the data so that we have the numerical comarison as well.
+  1. The [jupyter notebook](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/project_final_RFR.ipynb). Containing the steps on how we treated the data, trained the model and showcased the results.
+  2. The [split used](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/test_train%20split.png).
+  3. [Predictions](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/PREDICTIONS.png) graphically represented.
+  4. A [.csv file](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/data.csv) containing the data so that we have the numerical comarison as well.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 2.[Second Split](https://github.com/peremayolc/UAB_EnergyStudy/tree/main/Predictions/Random%20Forest%20Regressor/SPLIT2), here you can find the results after using "2023-01-01" to split the data:
-1.1. The [jupyter notebook](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT1/project_final_RFR.ipynb). Containing the steps on how we treated the data, trained the model and showcased the results.
-1.2. The [split used](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT2/test_train%20split2.png).
+1. The [jupyter notebook](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT2/project_final_RFR_split2.ipynb). Containing the steps on how we treated the data, trained the model and showcased the results.
+2. The [split used](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT2/test_train%20split2.png).
 1.3. [Predictions](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT2/PREDICTIONS_split2.png) graphically represented.
 1.4. A [.csv file](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/Random%20Forest%20Regressor/SPLIT2/data_split2.csv) containing the data so that we have the numerical comarison as well.
