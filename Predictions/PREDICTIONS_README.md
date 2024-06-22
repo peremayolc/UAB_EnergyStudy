@@ -8,10 +8,10 @@ The first folder, named [SARIMA](https://github.com/peremayolc/UAB_EnergyStudy/t
 [Results 1](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/SARIMA/RESULTS%20SARIMA.png) is using one year prior as a test set.
 And [Results 2](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/SARIMA/RESULTS_SARIMA_TEST2YEARS.png) is using two year prior as a test set.
 
-The notebook containing everything is named [Project Final Sarima](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/SARIMA/project_final_SARIMA.ipynb) where everything can be found on how we coded and constructed our SARIMA model. Further explanations on how the model works can be found on the main report. Both predictions appear in this document.
+  The notebook containing everything is named [Project Final Sarima](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/SARIMA/project_final_SARIMA.ipynb) where everything can be found on how we coded and constructed our SARIMA model. Further explanations on how the model works can be found on the main report. Both predictions appear in this document.
 
-2.Making predictions for the TOTAL monthly SUM consumoption.
-The notebook containing everythig for this part is here => [SARIMA monthly SUM](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/SARIMA/project_final_SARIMA_SUM.ipynb)
+2. Making predictions for the TOTAL monthly SUM consumoption.
+The notebook containing everythig for this part is here => [SARIMA monthly SUM](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/SARIMA/project_final_SARIMA_SUM.ipynb) And the [results](https://github.com/peremayolc/UAB_EnergyStudy/blob/main/Predictions/SARIMA/RESULTS_SARIMA_SUM.png) are showcased in the same folder as well.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
