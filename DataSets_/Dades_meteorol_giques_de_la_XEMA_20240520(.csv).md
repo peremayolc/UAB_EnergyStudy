@@ -1,0 +1,1 @@
+The [meteo](https://drive.google.com/file/d/1JL9x5iS8gFPX05HtBcOe1xiJydvL2VCw/view?usp=drive_link) data of the [Xarxa d’Estacions Meteorològiques Automàtiques (XEMA)](https://analisi.transparenciacatalunya.cat/Medi-Ambient/Metadades-estacions-meteorol-giques-autom-tiques/yqwd-vj5e/about_data). The CSV file is so large that we couldn't upload it to the repository.
